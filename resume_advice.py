@@ -5,7 +5,7 @@ import hashlib
 import os
 import time
 from docx import Document  # Import the Document class for working with .docx files
-
+ 
 # Set OpenAI API key securely
 openai.api_key = "ask-me-for-secret-key"
 
