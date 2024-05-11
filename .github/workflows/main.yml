@@ -26,11 +26,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          echo "Installing dependencies..."
+          pip install pytest  # Install pytest
+          # Install other dependencies if needed
 
       - name: Run tests
         run: |
-          echo "Running tests..."
+          pytest  # Run pytest tests
 
   deploy:
     runs-on: ubuntu-latest
