@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Uploader</title>
+<style>
+    /* Background theme */
+    body {
+        background-color: #282c34; /* Dark background color */
+        color: rgb(10, 9, 9);; /* Light text color */
+        font-family: 'Courier New', Courier, monospace; /* Monospace font */
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB1klEQVQYV52TW0vDQBDGv7+Uv7C8SHRBiWpBI7exVvGOwjsVngtVp7g4y/4H4X47h4m2DNABiJQqAjJRA8PDSpySqqqV7nt78md8ZyT3Lw6XaZZZ4AibJJoZxwLJjxWfAOJej3T1NcjW31uc12JwaBngndN7FgToBCqYLoEzVE6X7XYU3cmgzYA5VdBExx5X6pVqxbzTXFQyMht3D69Qa9+6/r6fTAF3Q4HZWDa70mnqMoxKp8n13XbRbHGYs6oK27K3Xu4RjGj8Zo9zDZb7u8eBGDw1wHD88Sg5hBqFgK5C4QhzD8eH6mKlFzWdHya7z3rvvjN+urI9q4Kg8sBKuErgMmSf+3fuM2DlOlNzFZVFRu5TnS+qV6DftYmzH9tHsnX3tqS2U/2TxVYl7geu03djZ0DA0NfThwAhMnQ0t9P7fhhtAonODCwkpKRBO1bVnTm4S2qXGMO4VlZWaFQqGAzQB8fG7k71sZjLuI5HPnku9tTTk0bZJ7zc5gC59WqGJBIQD6fDz8OACR6QdUAAAAASUVORK5CYII='); /* Base64 encoded code snippet as background image */
+        background-size: cover; /* Cover entire screen */
+        background-repeat: no-repeat; /* No repeating */
+    }
+
+    /* CSS styles */
+    .header {
+        text-align: center;
+        padding: 20px 0;
+    }
+
+    .website-name {
+        font-size: 36px;
+        color: #fff;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        animation: text-slide 2s ease infinite alternate;
+    }
+
+    @keyframes text-slide {
+        0% {
+            transform: translateY(-10px);
+        }
+        100% {
+            transform: translateY(10px);
+        }
+    }
+
+    /* CSS styles */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 600px;
+        margin: 100px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+    .container:hover {
+        transform: scale(1.05);
+    }
+    .upload-btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: rgb(10, 9, 9);
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s, box-shadow 0.3s;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    }
+    .upload-btn:hover {
+        background-color: #45a049;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    }
+    .upload-btn[disabled] {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+    #file-input {
+        display: none;
+    }
+    #file-label {
+        display: block;
+        margin-bottom: 10px;
+    }
+    #uploaded-file {
+        margin-top: 10px;
+        margin-bottom: 20px; /* margin bottom for spacing */
+    }
+    .uploading-icon {
+        display: none;
+    }
+    .uploading-icon.show {
+        display: inline-block;
+        margin-left: 5px;
+        animation: rotate 2s linear infinite;
+    }
+
+    @keyframes rotate {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        border-radius: 10px;
+        max-width: 300px;
+        animation-name: modalopen;
+        animation-duration: 0.3s;
+    }
+    @keyframes modalopen {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    /* Added animation for supported file formats */
+    .format-info {
+        display: inline-block;
+        margin-left: 5px;
+        animation-name: format-info-animation;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes format-info-animation {
+        0% {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        100% {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+    }
+
+    /* Added animation for file upload button */
+    .container:hover .upload-btn {
+        transform: translateY(-5px);
+    }
+
+    /* Added animation for file input label */
+    #file-label {
+        transition: transform 0.3s ease;
+    }
+    .container:hover #file-label {
+        transform: scale(1.1);
+    }
+
+    /* Added animation for uploaded file */
+    #uploaded-file {
+        transition: opacity 0.5s ease;
+    }
+    .container:hover #uploaded-file {
+        opacity: 0.7;
+    }
+</style>
+</head>
+<body>
+<div class="header">
+    <h1 class="website-name">Personalized Career and Education Guidance</h1>
+</div>
+
+<div class="container">
+    <h2 style="text-align: center;">Upload Your Resume</h2>
+    <form id="upload-form" enctype="multipart/form-data">
+        <!-- Updated label with animated file format support message -->
+        <label id="file-label" for="file-input" class="upload-btn">Choose File (.pdf, .docx)
+            <span id="format-info" class="format-info"></span>
+        </label>
+        <input type="file" id="file-input" name="resume" accept=".pdf,.docx" required>
+        <div id="uploaded-file"></div>
+        <span id="uploading-icon" class="uploading-icon">&#128260;</span>
+        <button type="submit" id="upload-btn" class="upload-btn" disabled>Upload</button>
+    </form>
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <p>Resume uploaded successfully!</p>
+  </div>
+</div>
+
+<script>
+    const form = document.getElementById('upload-form');
+    const fileInput = document.getElementById('file-input');
+    const uploadedFile = document.getElementById('uploaded-file');
+    const uploadingIcon = document.getElementById('uploading-icon');
+    const uploadBtn = document.getElementById('upload-btn');
+    const modal = document.getElementById('myModal');
+    const closeBtn = document.getElementsByClassName('close')[0];
+    const formatInfo = document.getElementById('format-info');
+    const supportedFormats = ['.pdf', '.docx'];
+    let formatIndex = 0;
+    let chosenFile = null;
+
+    // Animate supported file formats
+    setInterval(() => {
+        formatIndex = (formatIndex + 1) % supportedFormats.length;
+        formatInfo.textContent = supportedFormats[formatIndex];
+        formatInfo.classList.remove('animated');
+        void formatInfo.offsetWidth; // Trigger reflow to restart animation
+        formatInfo.classList.add('animated');
+    }, 2000);
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        if (chosenFile) {
+            uploadedFile.innerHTML = `Uploaded File: ${chosenFile.name}`;
+            uploadingIcon.classList.add('show');
+
+            const formData = new FormData();
+            formData.append('resume', chosenFile);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    uploadingIcon.classList.remove('show');
+                    modal.style.display = 'block';
+                } else {
+                    throw new Error('Upload failed');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        } else {
+            alert('Please choose a file to upload.');
+        }
+    });
+
+    // Function to show the chosen file to the user
+    function showChosenFile(file) {
+        const fileContainer = document.createElement('div');
+        fileContainer.innerHTML = `Chosen File: ${file.name} <span class="remove-file" onclick="removeChosenFile()">&#10006;</span>`;
+        uploadedFile.appendChild(fileContainer);
+    }
+
+    // Function to clear the chosen file from the UI
+    function clearChosenFile() {
+        uploadedFile.innerHTML = '';
+    }
+
+    // Function to remove the chosen file
+    function removeChosenFile() {
+        chosenFile = null;
+        fileInput.value = '';
+        uploadBtn.setAttribute('disabled', true);
+        clearChosenFile();
+    }
+
+    // Close the modal when the user clicks on the close button
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    };
+
+    // Close the modal when the user clicks anywhere outside of the modal
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+
+    // Enable upload button when a file is selected
+    fileInput.addEventListener('change', function() {
+        if (fileInput.files.length > 0) {
+            chosenFile = fileInput.files[0];
+            uploadBtn.removeAttribute('disabled');
+            showChosenFile(chosenFile);
+        } else {
+            chosenFile = null;
+            uploadBtn.setAttribute('disabled', true);
+            clearChosenFile();
+        }
+    });
+</script>
+</body>
+</html>
