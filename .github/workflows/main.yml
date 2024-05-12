@@ -42,5 +42,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Deploy to production
+        env:
+          OPENAI_SECRET_KEY: ${{ secrets.OPENAI_SECRET_KEY }}
         run: |
           echo "Deploying to production..."
+          # Call your deployment script and pass the secret key as an environment variable
+          ./deploy_script.sh $OPENAI_SECRET_KEY
