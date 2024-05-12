@@ -7,7 +7,7 @@ import time
 from docx import Document  # Import the Document class for working with .docx files
  
 # Set OpenAI API key securely
-openai.api_key = "ask-me-for-secret-key"
+openai.api_key = os.environ.get("OPENAI_SECRET_KEY")
 
 # Function to read a file and return its content as plain text
 def read_file(file_path):
