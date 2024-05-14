@@ -18,7 +18,7 @@ def query_keywords(api_url, app_id, api_key, keywords):
 
 # API key and app ID
 api_url = 'http://api.adzuna.com/v1/api/jobs/us/search/1'
-app_id = ''
+app_id = ' '
 api_key = ''
 keywords = ['Software Developer', 'Data Scientist', 'Product Manager']
 
