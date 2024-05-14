@@ -41,6 +41,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Give execute permissions to deploy_script.sh
+        run: |
+          chmod +x deploy_script.sh
+
       - name: Deploy to production
         env:
           OPENAI_SECRET_KEY: ${{ secrets.OPENAI_SECRET_KEY }}
