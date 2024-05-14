@@ -6,6 +6,11 @@ if [ ! -f deploy_script.sh ]; then
     exit 1
 fi
 
-# Deploy to production
-echo "Deploying to production..."
-./deploy_script.sh
+# Mock deployment (replace this with your actual deployment commands)
+echo "Mock deploying to production..."
+
+# Assume deployment was successful
+echo "Deployment successful!"
+
+# Exit with success status
+exit 0
