@@ -1,14 +1,14 @@
-// server.js
-
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const { exec } = require('child_process');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Multer storage configuration
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'uploads/');
@@ -21,15 +21,35 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Serve static files
-app.use(express.static(path.join(__dirname, 'public')));
-
-// POST endpoint for file upload
 app.post('/upload', upload.single('resume'), (req, res) => {
     if (!req.file) {
-        return res.status(400).send('No files were uploaded.');
+        return res.status(400).json({ success: false, message: 'No files were uploaded.' });
     }
-    res.send('File uploaded successfully.');
+    res.json({ success: true, resumePath: req.file.path });
+});
+
+app.post('/process', (req, res) => {
+    const { resumePath } = req.body;
+    console.log('Received request with resumePath:', resumePath);
+
+    if (!resumePath) {
+        return res.status(400).json({ success: false, message: 'Resume path is required.' });
+    }
+
+    const normalizedPath = path.normalize(resumePath);
+    const command = `python resume_advice.py ${normalizedPath}`;
+    console.log('Executing command:', command);
+
+    exec(command, (error, stdout, stderr) => {
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+        if (error) {
+            console.error(`exec error: ${error}`);
+            return res.status(500).json({ success: false, message: 'Error processing resume.', error: error.message, stderr: stderr });
+        }
+
+        res.json({ success: true, advice: stdout });
+    });
 });
 
 app.listen(PORT, () => {
