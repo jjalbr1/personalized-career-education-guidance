@@ -36,8 +36,10 @@ app.post('/process', (req, res) => {
         return res.status(400).json({ success: false, message: 'Resume path is required.' });
     }
 
-    const normalizedPath = path.normalize(resumePath);
-    const command = `python resume_advice.py ${normalizedPath}`;
+    const normalizedPath = path.resolve(resumePath);
+    console.log('Normalized path:', normalizedPath);
+
+    const command = `python resume_advice.py "${normalizedPath}"`;
     console.log('Executing command:', command);
 
     exec(command, (error, stdout, stderr) => {
