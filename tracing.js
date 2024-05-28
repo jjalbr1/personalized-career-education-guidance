@@ -1,33 +1,54 @@
-// tracing.js
-
 'use strict'
 
-const process = require('process');
-const opentelemetry = require('@opentelemetry/sdk-node');
+const { NodeSDK } = require('@opentelemetry/sdk-node');
+const { ZipkinExporter } = require('@opentelemetry/exporter-zipkin');
 const { getNodeAutoInstrumentations } = require('@opentelemetry/auto-instrumentations-node');
 const { ConsoleSpanExporter } = require('@opentelemetry/sdk-trace-base');
 const { Resource } = require('@opentelemetry/resources');
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
 
-// configure the SDK to export telemetry data to the console
-// enable all auto-instrumentations from the meta package
-const traceExporter = new ConsoleSpanExporter();
-const sdk = new opentelemetry.NodeSDK({
-  resource: new Resource({
-    [SemanticResourceAttributes.SERVICE_NAME]: 'my-service',
-  }),
-  traceExporter,
-  instrumentations: [getNodeAutoInstrumentations()]
+// Configure the Zipkin exporter
+const zipkinExporter = new ZipkinExporter({
+    url: 'http://localhost:9411/api/v2/spans'
 });
 
-// initialize the SDK and register with the OpenTelemetry API
-// this enables the API to record telemetry
-sdk.start();
+// Configure the SDK to export telemetry data to the Zipkin instance
+const sdk = new NodeSDK({
+    resource: new Resource({
+        [SemanticResourceAttributes.SERVICE_NAME]: 'my-service'
+    }),
+    traceExporter: zipkinExporter,
+    instrumentations: [getNodeAutoInstrumentations()]
+});
 
-// gracefully shut down the SDK on process exit
+// Additionally, you can configure another SDK instance to export to console if needed
+// This part is optional if you only want to export to Zipkin
+const consoleExporter = new ConsoleSpanExporter();
+const sdkConsole = new NodeSDK({
+    resource: new Resource({
+        [SemanticResourceAttributes.SERVICE_NAME]: 'my-service'
+    }),
+    traceExporter: consoleExporter,
+    instrumentations: [getNodeAutoInstrumentations()]
+});
+
+// Start both SDK instances
+sdk.start();
+sdkConsole.start();
+
+// Gracefully shut down the SDK on process exit
 process.on('SIGTERM', () => {
-  sdk.shutdown()
-    .then(() => console.log('Tracing terminated'))
-    .catch((error) => console.log('Error terminating tracing', error))
-    .finally(() => process.exit(0));
+    sdk.shutdown().then(() => {
+        console.log('Zipkin Tracing terminated');
+    }).catch((error) => {
+        console.error('Error terminating Zipkin tracing', error);
+    }).finally(() => {
+        process.exit(0);
+    });
+
+    sdkConsole.shutdown().then(() => {
+        console.log('Console Tracing terminated');
+    }).catch((error) => {
+        console.error('Error terminating Console tracing', error);
+    });
 });
