@@ -201,7 +201,6 @@
 <div class="container">
     <h2 style="text-align: center;">Upload Your Resume</h2>
     <form id="upload-form" enctype="multipart/form-data">
-        <!-- Updated label with animated file format support message -->
         <label id="file-label" for="file-input" class="upload-btn">Choose File (.pdf, .docx)
             <span id="format-info" class="format-info"></span>
         </label>
@@ -210,6 +209,8 @@
         <span id="uploading-icon" class="uploading-icon">&#128260;</span>
         <button type="submit" id="upload-btn" class="upload-btn" disabled>Upload</button>
     </form>
+    <button id="process-btn" class="upload-btn" style="display: none;">Get Advice</button>
+    <div id="advice"></div>
 </div>
 
 <!-- The Modal -->
@@ -230,9 +231,12 @@
     const modal = document.getElementById('myModal');
     const closeBtn = document.getElementsByClassName('close')[0];
     const formatInfo = document.getElementById('format-info');
+    const processBtn = document.getElementById('process-btn');
+    const adviceDiv = document.getElementById('advice');
     const supportedFormats = ['.pdf', '.docx'];
     let formatIndex = 0;
     let chosenFile = null;
+    let uploadedFilePath = '';
 
     // Animate supported file formats
     setInterval(() => {
@@ -257,21 +261,54 @@
                 method: 'POST',
                 body: formData
             })
-            .then(response => {
-                if (response.ok) {
-                    uploadingIcon.classList.remove('show');
+            .then(response => response.json())
+            .then(data => {
+                uploadingIcon.classList.remove('show');
+                if (data.success) {
+                    uploadedFilePath = data.resumePath;
                     modal.style.display = 'block';
+                    processBtn.style.display = 'block';
                 } else {
-                    throw new Error('Upload failed');
+                    alert('Upload failed');
                 }
             })
             .catch(error => {
+                uploadingIcon.classList.remove('show');
                 console.error('Error:', error);
+                alert('An error occurred while uploading the file.');
             });
         } else {
             alert('Please choose a file to upload.');
         }
     });
+
+    processBtn.addEventListener('click', function() {
+    if (uploadedFilePath) {
+        console.log('Sending request to /process with resumePath:', uploadedFilePath); // Debugging line
+        fetch('/process', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ resumePath: uploadedFilePath })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Response from /process:', data); // Debugging line
+            if (data.success) {
+                adviceDiv.innerText = data.advice;
+            } else {
+                alert('Error processing resume');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while processing the resume.');
+        });
+    } else {
+        alert('No file has been uploaded.');
+    }
+});
 
     // Function to show the chosen file to the user
     function showChosenFile(file) {
@@ -305,7 +342,7 @@
         }
     };
 
-    // Enable upload button when a file is selected
+    // Enable upload button when a file is selected.git
     fileInput.addEventListener('change', function() {
         if (fileInput.files.length > 0) {
             chosenFile = fileInput.files[0];
