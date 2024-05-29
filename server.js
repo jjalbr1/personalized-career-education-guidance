@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const { exec } = require('child_process');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,35 +28,48 @@ app.post('/upload', upload.single('resume'), (req, res) => {
     res.json({ success: true, resumePath: req.file.path });
 });
 
-app.post('/process', (req, res) => {
-    const { resumePath } = req.body;
-    console.log('Received request with resumePath:', resumePath);
+const processResume = (resumePath, action, res) => {
+    const normalizedPath = path.resolve(resumePath);
+    const command = `python resume_advice.py "${normalizedPath}" ${action}`;
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            return res.status(500).json({ success: false, message: 'Error processing resume.', error: error.message, stderr: stderr });
+        }
+        res.json({ success: true, result: stdout });
+    });
+};
 
+app.post('/salary', (req, res) => {
+    const { resumePath } = req.body;
     if (!resumePath) {
         return res.status(400).json({ success: false, message: 'Resume path is required.' });
     }
-
-    const normalizedPath = path.resolve(resumePath);
-    console.log('Normalized path:', normalizedPath);
-
-    const command = `python resume_advice.py "${normalizedPath}"`;
-    console.log('Executing command:', command);
-
-    exec(command, (error, stdout, stderr) => {
-        console.log(`stdout: ${stdout}`);
-        console.log(`stderr: ${stderr}`);
-        if (error) {
-            console.error(`exec error: ${error}`);
-            return res.status(500).json({ success: false, message: 'Error processing resume.', error: error.message, stderr: stderr });
-        }
-
-        res.json({ success: true, advice: stdout });
-    });
+    processResume(resumePath, 'salary', res);
 });
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-    })
+app.post('/role', (req, res) => {
+    const { resumePath } = req.body;
+    if (!resumePath) {
+        return res.status(400).json({ success: false, message: 'Resume path is required.' });
+    }
+    processResume(resumePath, 'role', res);
+});
+
+app.post('/skills', (req, res) => {
+    const { resumePath } = req.body;
+    if (!resumePath) {
+        return res.status(400).json({ success: false, message: 'Resume path is required.' });
+    }
+    processResume(resumePath, 'skills', res);
+});
+
+app.post('/future', (req, res) => {
+    const { resumePath } = req.body;
+    if (!resumePath) {
+        return res.status(400).json({ success: false, message: 'Resume path is required.' });
+    }
+    processResume(resumePath, 'future', res);
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
