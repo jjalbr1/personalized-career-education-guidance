@@ -70,28 +70,59 @@ def make_api_request_with_backoff(messages):
             print(f"An unexpected error occurred: {e}")
             sys.exit(1)
 
+def get_salary_expectation(resume_content):
+    prompt = "Based on the provided resume, give a salary expectation for the next potential role. Provide in the format of 'Salary range: xxx - xxx'."
+    messages = [
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": resume_content}
+    ]
+    return make_api_request_with_backoff(messages)
+
+def get_next_role(resume_content):
+    prompt = "Based on the provided resume, what should the user's next role be? Provide a description with a 'Next Role' header. Include the role title as a header with a three sentance description"
+    messages = [
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": resume_content}
+    ]
+    return make_api_request_with_backoff(messages)
+
+def get_skills_gap(resume_content):
+    prompt = "Identify three technical skills that the user does not have on their resume but would benefit them in their career. Provide a description two sentance description of these skills."
+    messages = [
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": resume_content}
+    ]
+    return make_api_request_with_backoff(messages)
+
+def get_future_roles(resume_content):
+    prompt = "Based on the provided resume, list some 3 job titles or roles that the user could aspire to achieve within the next 5 years. Put data in the format of 'X years: Title, Description'"
+    messages = [
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": resume_content}
+    ]
+    return make_api_request_with_backoff(messages)
+
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python resume_advice.py <resume_path>")
+    if len(sys.argv) < 3:
+        print("Usage: python resume_advice.py <resume_path> <action>")
         sys.exit(1)
     
     resume_path = sys.argv[1]
+    action = sys.argv[2]
     resume_content_str = read_file(resume_path)
-    resume_hash = generate_resume_hash(resume_content_str)
+    resume_content_str = truncate_resume_content(resume_content_str)
 
-    system_prompt = (
-        "You are a career advisor reviewing the provided resume. "
-        "Based on the resume, give specific advice on the following questions: "
-        "1. What should the user's next role be based on their experience, skills, and interests? "
-        "2. What skills or gaps does the user have that they can address to be more competitive when applying for the next role? "
-        "Please provide detailed recommendations and specific guidance."
-    )
+    if action == "salary":
+        result = get_salary_expectation(resume_content_str)
+    elif action == "role":
+        result = get_next_role(resume_content_str)
+    elif action == "skills":
+        result = get_skills_gap(resume_content_str)
+    elif action == "future":
+        result = get_future_roles(resume_content_str)
+    else:
+        print("Invalid action. Please use 'salary', 'role', 'skills', or 'future'.")
+        sys.exit(1)
+    
+    print(result)
 
-    truncated_resume_content = truncate_resume_content(resume_content_str)
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": truncated_resume_content}
-    ]
-
-    advice = make_api_request_with_backoff(messages)
-    print(advice)
