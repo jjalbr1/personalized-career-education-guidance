@@ -191,6 +191,13 @@
     .container:hover #uploaded-file {
         opacity: 0.7;
     }
+
+    /* Flexbox for buttons */
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
 </style>
 </head>
 <body>
@@ -209,7 +216,12 @@
         <span id="uploading-icon" class="uploading-icon">&#128260;</span>
         <button type="submit" id="upload-btn" class="upload-btn" disabled>Upload</button>
     </form>
-    <button id="process-btn" class="upload-btn" style="display: none;">Get Advice</button>
+    <div class="button-container">
+        <button id="salary-btn" class="upload-btn" style="display: none;">Current Salary Expectation</button>
+        <button id="role-btn" class="upload-btn" style="display: none;">Next Role Recommendation</button>
+        <button id="skills-btn" class="upload-btn" style="display: none;">Skill Gaps</button>
+        <button id="future-btn" class="upload-btn" style="display: none;">5-year plan</button>
+    </div>
     <div id="advice"></div>
 </div>
 
@@ -230,8 +242,10 @@
     const uploadBtn = document.getElementById('upload-btn');
     const modal = document.getElementById('myModal');
     const closeBtn = document.getElementsByClassName('close')[0];
-    const formatInfo = document.getElementById('format-info');
-    const processBtn = document.getElementById('process-btn');
+    const salaryBtn = document.getElementById('salary-btn');
+    const roleBtn = document.getElementById('role-btn');
+    const skillsBtn = document.getElementById('skills-btn');
+    const futureBtn = document.getElementById('future-btn');
     const adviceDiv = document.getElementById('advice');
     const supportedFormats = ['.pdf', '.docx'];
     let formatIndex = 0;
@@ -267,7 +281,10 @@
                 if (data.success) {
                     uploadedFilePath = data.resumePath;
                     modal.style.display = 'block';
-                    processBtn.style.display = 'block';
+                    salaryBtn.style.display = 'block';
+                    roleBtn.style.display = 'block';
+                    skillsBtn.style.display = 'block';
+                    futureBtn.style.display = 'block';
                 } else {
                     alert('Upload failed');
                 }
@@ -282,76 +299,54 @@
         }
     });
 
-    processBtn.addEventListener('click', function() {
-    if (uploadedFilePath) {
-        console.log('Sending request to /process with resumePath:', uploadedFilePath); // Debugging line
-        fetch('/process', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ resumePath: uploadedFilePath })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Response from /process:', data); // Debugging line
-            if (data.success) {
-                adviceDiv.innerText = data.advice;
-            } else {
-                alert('Error processing resume');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while processing the resume.');
-        });
-    } else {
-        alert('No file has been uploaded.');
-    }
-});
+    const fetchAdvice = (endpoint) => {
+        if (uploadedFilePath) {
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ resumePath: uploadedFilePath })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    adviceDiv.innerText = data.result;
+                } else {
+                    alert('Error processing resume');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while processing the resume.');
+            });
+        } else {
+            alert('No file has been uploaded.');
+        }
+    };
 
-    // Function to show the chosen file to the user
-    function showChosenFile(file) {
-        const fileContainer = document.createElement('div');
-        fileContainer.innerHTML = `Chosen File: ${file.name} <span class="remove-file" onclick="removeChosenFile()">&#10006;</span>`;
-        uploadedFile.appendChild(fileContainer);
-    }
+    salaryBtn.addEventListener('click', () => fetchAdvice('/salary'));
+    roleBtn.addEventListener('click', () => fetchAdvice('/role'));
+    skillsBtn.addEventListener('click', () => fetchAdvice('/skills'));
+    futureBtn.addEventListener('click', () => fetchAdvice('/future'));
 
-    // Function to clear the chosen file from the UI
-    function clearChosenFile() {
-        uploadedFile.innerHTML = '';
-    }
-
-    // Function to remove the chosen file
-    function removeChosenFile() {
-        chosenFile = null;
-        fileInput.value = '';
-        uploadBtn.setAttribute('disabled', true);
-        clearChosenFile();
-    }
-
-    // Close the modal when the user clicks on the close button
     closeBtn.onclick = function() {
         modal.style.display = 'none';
     };
 
-    // Close the modal when the user clicks anywhere outside of the modal
     window.onclick = function(event) {
         if (event.target === modal) {
             modal.style.display = 'none';
         }
     };
 
-    // Enable upload button when a file is selected.git
     fileInput.addEventListener('change', function() {
         if (fileInput.files.length > 0) {
             chosenFile = fileInput.files[0];
             uploadBtn.removeAttribute('disabled');
-            showChosenFile(chosenFile);
         } else {
             chosenFile = null;
             uploadBtn.setAttribute('disabled', true);
-            clearChosenFile();
         }
     });
 </script>
