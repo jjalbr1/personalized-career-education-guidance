@@ -6,7 +6,9 @@ import time
 from docx import Document  # Import the Document class for working with .docx files
 
 # Get OpenAI API key from environment variable
+#todo uncomment this line
 openai_api_key = os.getenv('OPENAI_API_KEY')
+
 
 if not openai_api_key:
     print("Error: OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
@@ -70,32 +72,8 @@ def make_api_request_with_backoff(messages):
             print(f"An unexpected error occurred: {e}")
             sys.exit(1)
 
-def get_salary_expectation(resume_content):
-    prompt = "Based on the provided resume, give a salary expectation for the next potential role. Provide in the format of 'Salary range: xxx - xxx'."
-    messages = [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": resume_content}
-    ]
-    return make_api_request_with_backoff(messages)
 
-def get_next_role(resume_content):
-    prompt = "Based on the provided resume, what should the user's next role be? Provide a description with a 'Next Role' header. Include the role title as a header with a three sentance description"
-    messages = [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": resume_content}
-    ]
-    return make_api_request_with_backoff(messages)
-
-def get_skills_gap(resume_content):
-    prompt = "Identify three technical skills that the user does not have on their resume but would benefit them in their career. Provide a description two sentance description of these skills."
-    messages = [
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": resume_content}
-    ]
-    return make_api_request_with_backoff(messages)
-
-def get_future_roles(resume_content):
-    prompt = "Based on the provided resume, list some 3 job titles or roles that the user could aspire to achieve within the next 5 years. Put data in the format of 'X years: Title, Description'"
+def get_recommendation(resume_content, prompt):
     messages = [
         {"role": "system", "content": prompt},
         {"role": "user", "content": resume_content}
@@ -113,16 +91,20 @@ if __name__ == "__main__":
     resume_content_str = truncate_resume_content(resume_content_str)
 
     if action == "salary":
-        result = get_salary_expectation(resume_content_str)
+        prompt = "Based on the provided resume, give a salary expectation for the next potential role. Provide in the format of 'Salary range: xxx - xxx'."
+        result = get_recommendation(resume_content_str, prompt)
     elif action == "role":
-        result = get_next_role(resume_content_str)
+        prompt = "Based on the provided resume, what should the user's next role be? Provide a description with a 'Next Role' header. Include the role title as a header with a three sentance description"
+        result = get_recommendation(resume_content_str, prompt)
     elif action == "skills":
-        result = get_skills_gap(resume_content_str)
+        prompt = "Identify three technical skills that the user does not have on their resume but would benefit them in their career. Provide a description two sentance description of these skills."
+        result = get_recommendation(resume_content_str, prompt)
     elif action == "future":
-        result = get_future_roles(resume_content_str)
+        prompt = "Based on the provided resume, list some 3 job titles or roles that the user could aspire to achieve within the next 5 years. Put data in the format of 'X years: Title, Description'"
+        result = get_recommendation(resume_content_str, prompt)
     else:
-        print("Invalid action. Please use 'salary', 'role', 'skills', or 'future'.")
-        sys.exit(1)
+        prompt = "Provide general career advice based on the user's resume."
+        result = get_recommendation(resume_content_str, prompt)
     
     print(result)
 
