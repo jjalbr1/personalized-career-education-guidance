@@ -102,6 +102,9 @@ if __name__ == "__main__":
     elif action == "future":
         prompt = "Based on the provided resume, list some 3 job titles or roles that the user could aspire to achieve within the next 5 years. Put data in the format of 'X years: Title, Description'"
         result = get_recommendation(resume_content_str, prompt)
+    elif action == "Next Steps":
+        prompt = "Based on the provided resume, what are the next steps the user should take in their career? Provide two concrete links with a 'Next Steps' header."
+        result = get_recommendation(resume_content_str, prompt)
     else:
         prompt = "Provide general career advice based on the user's resume."
         result = get_recommendation(resume_content_str, prompt)
