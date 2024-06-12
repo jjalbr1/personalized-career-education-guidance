@@ -8,12 +8,15 @@ Steps to set up your environment prior to attempting to run the project successf
   4. Pull the latest changes with the following command "git pull"
   5. Ensure you have "personalized-career-education-guidance" on your local computer/IDE
   6. Ensure you are in the correct project directory and files have content
-  7. Download Python 3.12 from  https://www.python.org/downloads/
-  8. Versify installation with python -m pip --version
-  9. Confirm version downloaded matches what appears
-  10. Set environment variable by typing the following into the terminal: "$env:OPENAI_SECRET_KEY = "ASK ME FOR SECRET 
+  8. Download Python 3.12 from  https://www.python.org/downloads/
+  9. Verify installation with python -m pip --version
+  10. Confirm version downloaded matches what appears
+  11. Download dependencies (docx, openai( with the following commands:y
+      pip install openai
+      pip install python-docx
+  13. Set environment variable by typing the following into the terminal: "$env:OPENAI_SECRET_KEY = "ASK ME FOR SECRET 
   KEY""
-  11. Finally, type in "pip install openai==0.28" to the terminal
+  14. Finally, type in "pip install openai==0.28" to the terminal
   
   After this you should be able to successfully run the project without error.
 
