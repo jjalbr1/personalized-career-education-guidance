@@ -7,15 +7,15 @@
 <style>
     /* Background theme */
     body {
-        background: linear-gradient(135deg, #2c3e50, #3498db); /* Gradient background */
-        color: #ffffff; /* Light text color */
+        background-color: #282c34; /* Dark background color */
+        color: rgb(10, 9, 9); /* Light text color */
         font-family: 'Courier New', Courier, monospace; /* Monospace font */
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB1klEQVQYV52TW0vDQBDGv7+Uv7C8SHRBiWpBI7exVvGOwjsVngtVp7g4y/4H4X47h4m2DNABiJQqAjJRA8PDSpySqqqV7nt78md8ZyT3Lw6XaZZZ4AibJJoZxwLJjxWfAOJej3T1NcjW31uc12JwaBngndN7FgToBCqYLoEzVE6X7XYU3cmgzYA5VdBExx5X6pVqxbzTXFQyMht3D69Qa9+6/r6fTAF3Q4HZWDa70mnqMoxKp8n13XbRbHGYs6oK27K3Xu4RjGj8Zo9zDZb7u8eBGDw1wHD88Sg5hBqFgK5C4QhzD8eH6mKlFzWdHya7z3rvvjN+urI9q4Kg8sBKuErgMmSf+3fuM2DlOlNzFZVFRu5TnS+qV6DftYmzH9tHsnX3tqS2U/2TxVYl7geu03djZ0DA0NfThwAhMnQ0t9P7fhhtAonODCwkpKRBO1bVnTm4S2qXGMO4VlZWaFQqGAzQB8fG7k71sZjLuI5HPnku9tTTk0bZJ7zc5gC59WqGJBIQD6fDz8OACR6QdUAAAAASUVORK5CYII='); /* Base64 encoded code snippet as background image */
         background-size: cover; /* Cover entire screen */
         background-repeat: no-repeat; /* No repeating */
-        margin: 0;
-        padding: 0;
     }
 
+    /* CSS styles */
     .header {
         text-align: center;
         padding: 20px 0;
@@ -37,75 +37,60 @@
         }
     }
 
+    /* CSS styles */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
     .container {
         width: 60%;
         max-width: 60%;
         margin: 100px auto;
         padding: 20px;
-        background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+        background-color: #fff;
         border-radius: 10px;
-        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-        transition: transform 0.3s ease, background-color 0.3s ease;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
     }
-
     .container:hover {
         transform: scale(1.05);
-        background: rgba(255, 255, 255, 0.2); /* Darker semi-transparent background */
     }
-
     .upload-btn {
         display: inline-block;
         padding: 10px 20px;
-        background: linear-gradient(45deg, #4CAF50, #8BC34A);
-        color: #ffffff;
+        background-color: #4CAF50;
+        color: rgb(10, 9, 9);
         text-align: center;
         text-decoration: none;
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+        transition: background-color 0.3s, box-shadow 0.3s;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     }
-
     .upload-btn:hover {
-        background: linear-gradient(45deg, #45a049, #7CB342);
+        background-color: #45a049;
         box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-        transform: translateY(-5px);
     }
-
     .upload-btn[disabled] {
-        background: #ccc;
+        background-color: #ccc;
         cursor: not-allowed;
     }
-
     #file-input {
         display: none;
     }
-
     #file-label {
         display: block;
         margin-bottom: 10px;
-        transition: transform 0.3s ease;
     }
-
-    .container:hover #file-label {
-        transform: scale(1.1);
-    }
-
     #uploaded-file {
         margin-top: 10px;
         margin-bottom: 20px; /* margin bottom for spacing */
-        transition: opacity 0.5s ease;
     }
-
-    .container:hover #uploaded-file {
-        opacity: 0.7;
-    }
-
     .uploading-icon {
         display: none;
     }
-
     .uploading-icon.show {
         display: inline-block;
         margin-left: 5px;
@@ -118,6 +103,7 @@
         }
     }
 
+    /* Modal styles */
     .modal {
         display: none;
         position: fixed;
@@ -127,20 +113,18 @@
         width: 100%;
         height: 100%;
         overflow: auto;
-        background-color: rgba(0, 0, 0, 0.8); /* Darker overlay */
+        background-color: rgba(0, 0, 0, 0.4);
     }
-
     .modal-content {
-        background-color: #2c3e50;
-        color: #ffffff;
+        background-color: #fefefe;
         margin: 15% auto;
         padding: 20px;
         border: 1px solid #888;
         border-radius: 10px;
         max-width: 300px;
-        animation: modalopen 0.3s;
+        animation-name: modalopen;
+        animation-duration: 0.3s;
     }
-
     @keyframes modalopen {
         from {
             opacity: 0;
@@ -151,26 +135,26 @@
             transform: scale(1);
         }
     }
-
     .close {
         color: #aaa;
         float: right;
         font-size: 28px;
         font-weight: bold;
-        transition: color 0.3s;
     }
-
     .close:hover,
     .close:focus {
-        color: #ffffff;
+        color: black;
         text-decoration: none;
         cursor: pointer;
     }
 
+    /* Added animation for supported file formats */
     .format-info {
         display: inline-block;
         margin-left: 5px;
-        animation: format-info-animation 2s infinite;
+        animation-name: format-info-animation;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
     }
 
     @keyframes format-info-animation {
@@ -188,15 +172,32 @@
         }
     }
 
-    .button-container {
-        display: flex;
-        justify-content: space-around; /* More evenly distributed buttons */
-        flex-wrap: wrap;
-        margin-top: 20px;
+    /* Added animation for file upload button */
+    .container:hover .upload-btn {
+        transform: translateY(-5px);
     }
 
-    .upload-btn {
-        margin: 5px;
+    /* Added animation for file input label */
+    #file-label {
+        transition: transform 0.3s ease;
+    }
+    .container:hover #file-label {
+        transform: scale(1.1);
+    }
+
+    /* Added animation for uploaded file */
+    #uploaded-file {
+        transition: opacity 0.5s ease;
+    }
+    .container:hover #uploaded-file {
+        opacity: 0.7;
+    }
+
+    /* Flexbox for buttons */
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
     }
 </style>
 </head>
