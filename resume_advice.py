@@ -72,7 +72,6 @@ def make_api_request_with_backoff(messages):
             print(f"An unexpected error occurred: {e}")
             sys.exit(1)
 
-
 def get_recommendation(resume_content, prompt):
     messages = [
         {"role": "system", "content": prompt},
@@ -94,16 +93,25 @@ if __name__ == "__main__":
         prompt = "Based on the provided resume, give a salary expectation for the next potential role. Provide in the format of 'Salary range: xxx - xxx'."
         result = get_recommendation(resume_content_str, prompt)
     elif action == "role":
-        prompt = "Based on the provided resume, what should the user's next role be? Provide a description with a 'Next Role' header. Include the role title as a header with a three sentance description"
+        prompt = "Based on the provided resume, what should the user's next role be? Provide a description with a 'Next Role' header. Include the role title as a header with a three sentence description."
         result = get_recommendation(resume_content_str, prompt)
     elif action == "skills":
-        prompt = "Identify three technical skills that the user does not have on their resume but would benefit them in their career. Provide a description two sentance description of these skills."
+        prompt = "Identify three technical skills that the user does not have on their resume but would benefit them in their career. Provide a description two sentence description of these skills."
         result = get_recommendation(resume_content_str, prompt)
     elif action == "future":
         prompt = "Based on the provided resume, list some 3 job titles or roles that the user could aspire to achieve within the next 5 years. Put data in the format of 'X years: Title, Description'"
         result = get_recommendation(resume_content_str, prompt)
-    elif action == "Next Steps":
-        prompt = "Based on the provided resume, what are the next steps the user should take in their career? Provide two concrete links with a 'Next Steps' header."
+    elif action == "similar-roles":
+        prompt = "Based on the provided resume, suggest three potential jobs that are similar to the user's current role. Provide each suggestion with a job title and a two-sentence description."
+        result = get_recommendation(resume_content_str, prompt)
+    elif action == "interview-prep":
+        prompt = "Based on the provided resume, provide common interview questions and tips for preparing for job interviews."
+        result = get_recommendation(resume_content_str, prompt)
+    elif action == "certifications":
+        prompt = "Based on the provided resume, suggest professional certifications that could benefit the user's career. Provide a brief description of each certification."
+        result = get_recommendation(resume_content_str, prompt)
+    elif action == "further-education":
+        prompt = "Based on the provided resume, recommend further education options that could benefit the user's career. Provide a brief description of each option."
         result = get_recommendation(resume_content_str, prompt)
     else:
         prompt = "Provide general career advice based on the user's resume."
