@@ -71,6 +71,38 @@ app.post('/future', (req, res) => {
     processResume(resumePath, 'future', res);
 });
 
+app.post('/similar-roles', (req, res) => {
+    const { resumePath } = req.body;
+    if (!resumePath) {
+        return res.status(400).json({ success: false, message: 'Resume path is required.' });
+    }
+    processResume(resumePath, 'similar-roles', res);
+});
+
+app.post('/interview-prep', (req, res) => {
+    const { resumePath } = req.body;
+    if (!resumePath) {
+        return res.status(400).json({ success: false, message: 'Resume path is required.' });
+    }
+    processResume(resumePath, 'interview-prep', res);
+});
+
+app.post('/certifications', (req, res) => {
+    const { resumePath } = req.body;
+    if (!resumePath) {
+        return res.status(400).json({ success: false, message: 'Resume path is required.' });
+    }
+    processResume(resumePath, 'certifications', res);
+});
+
+app.post('/further-education', (req, res) => {
+    const { resumePath } = req.body;
+    if (!resumePath) {
+        return res.status(400).json({ success: false, message: 'Resume path is required.' });
+    }
+    processResume(resumePath, 'further-education', res);
+});
+
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
