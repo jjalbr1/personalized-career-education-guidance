@@ -8,7 +8,7 @@
     /* Background theme */
     body {
         background-color: #282c34; /* Dark background color */
-        color: rgb(10, 9, 9);; /* Light text color */
+        color: rgb(10, 9, 9); /* Light text color */
         font-family: 'Courier New', Courier, monospace; /* Monospace font */
         background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAB1klEQVQYV52TW0vDQBDGv7+Uv7C8SHRBiWpBI7exVvGOwjsVngtVp7g4y/4H4X47h4m2DNABiJQqAjJRA8PDSpySqqqV7nt78md8ZyT3Lw6XaZZZ4AibJJoZxwLJjxWfAOJej3T1NcjW31uc12JwaBngndN7FgToBCqYLoEzVE6X7XYU3cmgzYA5VdBExx5X6pVqxbzTXFQyMht3D69Qa9+6/r6fTAF3Q4HZWDa70mnqMoxKp8n13XbRbHGYs6oK27K3Xu4RjGj8Zo9zDZb7u8eBGDw1wHD88Sg5hBqFgK5C4QhzD8eH6mKlFzWdHya7z3rvvjN+urI9q4Kg8sBKuErgMmSf+3fuM2DlOlNzFZVFRu5TnS+qV6DftYmzH9tHsnX3tqS2U/2TxVYl7geu03djZ0DA0NfThwAhMnQ0t9P7fhhtAonODCwkpKRBO1bVnTm4S2qXGMO4VlZWaFQqGAzQB8fG7k71sZjLuI5HPnku9tTTk0bZJ7zc5gC59WqGJBIQD6fDz8OACR6QdUAAAAASUVORK5CYII='); /* Base64 encoded code snippet as background image */
         background-size: cover; /* Cover entire screen */
@@ -44,7 +44,8 @@
         padding: 0;
     }
     .container {
-        max-width: 600px;
+        width: 60%;
+        max-width: 60%;
         margin: 100px auto;
         padding: 20px;
         background-color: #fff;
@@ -221,6 +222,10 @@
         <button id="role-btn" class="upload-btn" style="display: none;">Next Role Recommendation</button>
         <button id="skills-btn" class="upload-btn" style="display: none;">Skill Gaps</button>
         <button id="future-btn" class="upload-btn" style="display: none;">5-year plan</button>
+        <button id="similar-roles-btn" class="upload-btn" style="display: none;">Similar Roles</button>
+        <button id="interview-prep-btn" class="upload-btn" style="display: none;">Interview Preparation</button>
+        <button id="certifications-btn" class="upload-btn" style="display: none;">Certifications</button>
+        <button id="further-education-btn" class="upload-btn" style="display: none;">Further Education</button>
     </div>
     <div id="advice"></div>
 </div>
@@ -246,6 +251,10 @@
     const roleBtn = document.getElementById('role-btn');
     const skillsBtn = document.getElementById('skills-btn');
     const futureBtn = document.getElementById('future-btn');
+    const similarRolesBtn = document.getElementById('similar-roles-btn');
+    const interviewPrepBtn = document.getElementById('interview-prep-btn');
+    const certificationsBtn = document.getElementById('certifications-btn');
+    const furtherEducationBtn = document.getElementById('further-education-btn');
     const adviceDiv = document.getElementById('advice');
     const supportedFormats = ['.pdf', '.docx'];
     let formatIndex = 0;
@@ -285,6 +294,10 @@
                     roleBtn.style.display = 'block';
                     skillsBtn.style.display = 'block';
                     futureBtn.style.display = 'block';
+                    similarRolesBtn.style.display = 'block';
+                    interviewPrepBtn.style.display = 'block';
+                    certificationsBtn.style.display = 'block';
+                    furtherEducationBtn.style.display = 'block';
                 } else {
                     alert('Upload failed');
                 }
@@ -329,6 +342,10 @@
     roleBtn.addEventListener('click', () => fetchAdvice('/role'));
     skillsBtn.addEventListener('click', () => fetchAdvice('/skills'));
     futureBtn.addEventListener('click', () => fetchAdvice('/future'));
+    similarRolesBtn.addEventListener('click', () => fetchAdvice('/similar-roles'));
+    interviewPrepBtn.addEventListener('click', () => fetchAdvice('/interview-prep'));
+    certificationsBtn.addEventListener('click', () => fetchAdvice('/certifications'));
+    furtherEducationBtn.addEventListener('click', () => fetchAdvice('/further-education'));
 
     closeBtn.onclick = function() {
         modal.style.display = 'none';
