@@ -96,7 +96,7 @@ if __name__ == "__main__":
         prompt = "Based on the provided resume, what should the user's next role be? Provide a description with a 'Next Role' header. Include the role title as a header with a three sentence description."
         result = get_recommendation(resume_content_str, prompt)
     elif action == "skills":
-        prompt = "Identify three technical skills that the user does not have on their resume but would benefit them in their career. Provide a description two sentence description of these skills."
+        prompt = "Identify three technical skills that the user does not have on their resume but would benefit them in their career. Provide a description two sentence description of these skills. Include links to provide the user with concrete direction on how to progress."
         result = get_recommendation(resume_content_str, prompt)
     elif action == "future":
         prompt = "Based on the provided resume, list some 3 job titles or roles that the user could aspire to achieve within the next 5 years. Put data in the format of 'X years: Title, Description'"
